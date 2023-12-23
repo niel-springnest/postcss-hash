@@ -5,6 +5,7 @@ const { dirname, basename } = require("path");
 const MapGenerator = require("postcss/lib/map-generator");
 const utils = require("./utils");
 const mkdirp = require("mkdirp");
+const isEqual = require('lodash.isequal');
 
 module.exports = opts => {
     opts = Object.assign(
@@ -81,6 +82,10 @@ module.exports = opts => {
             } catch (e) {
                 oldData = {};
             }
+
+            // Only write the manifest if the data has changed
+            if (isEqual(oldData, newData)) return;
+
             const data = JSON.stringify(
                 Object.assign(oldData, newData),
                 null,
